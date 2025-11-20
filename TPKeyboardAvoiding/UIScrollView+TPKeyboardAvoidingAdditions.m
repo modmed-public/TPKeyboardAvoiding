@@ -30,6 +30,7 @@ static const int kPaddingKey;
 @property (nonatomic, assign) BOOL         keyboardVisible;
 @property (nonatomic, assign) CGRect       keyboardRect;
 @property (nonatomic, assign) CGSize       priorContentSize;
+@property (nonatomic, assign) CGPoint      priorContentOffset;
 @property (nonatomic, assign) BOOL         priorPagingEnabled;
 @property (nonatomic, assign) BOOL         ignoringNotifications;
 @property (nonatomic, assign) BOOL         keyboardAnimationInProgress;
@@ -123,6 +124,7 @@ static const int kPaddingKey;
         
         UIView *firstResponder = [self TPKeyboardAvoiding_findFirstResponderBeneathView:self];
         if ( firstResponder ) {
+            state.priorContentOffset = self.contentOffset;
             CGFloat viewableHeight = self.bounds.size.height - self.contentInset.top - self.contentInset.bottom;
             [self setContentOffset:CGPointMake(self.contentOffset.x,
                                                [self TPKeyboardAvoiding_idealOffsetForView:firstResponder
@@ -175,6 +177,7 @@ static const int kPaddingKey;
     
     if ( [self isKindOfClass:[TPKeyboardAvoidingScrollView class]] ) {
         self.contentSize = state.priorContentSize;
+        [self setContentOffset:state.priorContentOffset animated:NO];
     }
     
     self.contentInset = state.priorInset;
